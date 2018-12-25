@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {View, Button, TextInput, StyleSheet} from 'react-native';
+import {View, Button, Text, TextInput, StyleSheet, TouchableHighlight} from 'react-native';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import Toast, {DURATION} from 'react-native-easy-toast'
 import {createMemo} from '../../api';
 
@@ -18,19 +19,47 @@ class MemoCreate extends Component {
         }
     };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isDateTimePickerVisible: false,
+            date: null,
+        };
+    }
+
     componentDidMount() {
         this.props.navigation.setParams({createMemo: this.createMemo});
     }
 
     render() {
+        const dateText = this.state.date ? this.state.date.toLocaleDateString("en-US") : 'Date?';
+
         return (
             <View style={styles.container}>
                 <Toast ref="toast"/>
-                <TextInput style={styles.participant} onChangeText={(participant) => this.setState({participant})}/>
-                <TextInput style={styles.memo} multiline={true} onChangeText={(memo) => this.setState({memo})}/>
+                <TextInput style={styles.participant} placeholder="Participant"
+                           placeholderTextColor="#969696" onChangeText={(participant) => this.setState({participant})}/>
+                <TouchableHighlight style={styles.date} activeOpacity={0.9}
+                                    onPress={this.showDateTimePicker}><Text style={styles.placeholder}>{dateText}</Text></TouchableHighlight>
+                <TextInput style={styles.memo} placeholder="Description" placeholderTextColor="#969696" multiline={true}
+                           onChangeText={(memo) => this.setState({memo})}/>
+                <DateTimePicker
+                    isVisible={this.state.isDateTimePickerVisible}
+                    onConfirm={this.handleDatePicked}
+                    onCancel={this.hideDateTimePicker}
+                />
             </View>
         );
     }
+
+    showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
+
+    hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
+
+    handleDatePicked = (date) => {
+        this.setState({date});
+        this.hideDateTimePicker();
+    };
 
     createMemo = () => {
         createMemo({
@@ -58,7 +87,14 @@ const styles = StyleSheet.create({
     participant: {
         margin: 16,
         backgroundColor: 'rgb(245,245,245)',
-        height: 70,
+        height: 50,
+        padding: 8
+    },
+    date: {
+        margin: 16,
+        marginTop: 4,
+        backgroundColor: 'rgb(245,245,245)',
+        height: 50,
         padding: 8
     },
     memo: {
@@ -67,6 +103,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgb(245,245,245)',
         flex: 1,
         padding: 8
+    },
+    placeholder: {
+        color: 'rgb(150,150,150)'
     }
 });
 
