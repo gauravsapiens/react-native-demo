@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Image, View, Button, Text, SectionList, StyleSheet} from 'react-native';
+import {
+    ActivityIndicator,
+    Image,
+    View,
+    Button,
+    Text,
+    SectionList,
+    StyleSheet,
+    TouchableWithoutFeedback
+} from 'react-native';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {reduce as _reduce, map as _map, sortBy as _sortBy} from 'lodash';
 import moment from 'moment';
 
@@ -9,11 +19,11 @@ class MemoHome extends Component {
         return {
             title: 'Memos',
             headerRight: (
-                <Button
-                    onPress={() => navigation.navigate('Create')}
-                    title="+  "
-                    color="#000000"
-                />
+                <TouchableWithoutFeedback onPress={() => navigation.navigate('Create')}>
+                    <View style={{marginRight: 16}}>
+                        <MaterialCommunityIcons name="plus" size={24} color="black"/>
+                    </View>
+                </TouchableWithoutFeedback>
             )
         }
     };

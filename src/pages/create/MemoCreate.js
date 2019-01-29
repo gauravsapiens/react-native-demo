@@ -7,13 +7,15 @@ import {
     Text,
     TextInput,
     StyleSheet,
+    ScrollView,
     InputAccessoryView,
-    TouchableHighlight
+    TouchableHighlight,
+    TouchableWithoutFeedback
 } from 'react-native';
 import {ImagePicker, Permissions} from 'expo';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import Toast, {DURATION} from 'react-native-easy-toast'
 import {createMemo, uploadPhoto} from '../../api';
+import {MaterialIcons} from '@expo/vector-icons';
 
 class MemoCreate extends Component {
 
@@ -50,36 +52,45 @@ class MemoCreate extends Component {
 
         return (
             <View style={styles.container}>
-                <Toast ref="toast"/>
 
-                <TouchableHighlight style={styles.dateContainer} activeOpacity={0.9} onPress={this.showDateTimePicker}>
-                    <Text style={styles.date}>{dateText}</Text>
-                </TouchableHighlight>
+                <ScrollView>
 
-                {image != null && <ImageBackground style={styles.image} source={{uri: image.uri}}>
-                    {image.uploading ? <View style={styles.overlay}><ActivityIndicator color="white"/></View> : <View/>}
-                </ImageBackground>}
+                    <TouchableHighlight style={styles.dateContainer} onPress={this.showDateTimePicker}
+                                        underlayColor="969696">
+                        <Text style={styles.date}>{dateText}</Text>
+                    </TouchableHighlight>
 
-                <TextInput returnKeyLabel={'Next'} returnKeyType={'next'}
-                           onSubmitEditing={() => this.nextInputRef.focus()} autoFocus style={styles.participant}
-                           placeholder="Participant"
-                           placeholderTextColor="#969696" onChangeText={(participant) => this.setState({participant})}/>
+                    {image != null && <ImageBackground style={styles.image} source={{uri: image.uri}}>
+                        {image.uploading ? <View style={styles.overlay}><ActivityIndicator color="white"/></View> :
+                            <View/>}
+                    </ImageBackground>}
 
-                <TextInput ref={(comp) => this.nextInputRef = comp} style={styles.memo} placeholder="Description"
-                           inputAccessoryViewID={inputAccessoryViewID}
-                           placeholderTextColor="#969696" multiline={true}
-                           onChangeText={(memo) => this.setState({memo})}/>
+                    <TextInput returnKeyLabel={'Next'} returnKeyType={'next'}
+                               onSubmitEditing={() => this.nextInputRef.focus()} autoFocus style={styles.participant}
+                               placeholder="Participant"
+                               placeholderTextColor="#969696"
+                               onChangeText={(participant) => this.setState({participant})}/>
 
-                <DateTimePicker
-                    isVisible={this.state.isDateTimePickerVisible}
-                    onConfirm={this.handleDatePicked}
-                    onCancel={this.hideDateTimePicker}
-                />
+                    <TextInput ref={(comp) => this.nextInputRef = comp} style={styles.memo} placeholder="Description"
+                               inputAccessoryViewID={inputAccessoryViewID}
+                               placeholderTextColor="#969696" multiline={true}
+                               onChangeText={(memo) => this.setState({memo})}/>
+
+                    <DateTimePicker
+                        isVisible={this.state.isDateTimePickerVisible}
+                        onConfirm={this.handleDatePicked}
+                        onCancel={this.hideDateTimePicker}
+                    />
+
+                </ScrollView>
 
                 <InputAccessoryView nativeID={inputAccessoryViewID}>
-                    <View style={{backgroundColor: 'white'}}>
-                        <Button onPress={this.uploadPhoto} title="Upload Image"/>
-                    </View>
+                    <TouchableWithoutFeedback onPress={this.uploadPhoto}>
+                        <View style={styles.uploadContainer}>
+                            <MaterialIcons name="add-a-photo" size={24} color="#2a7bf6"/>
+                            <Text style={{marginLeft: 8, color: "#2a7bf6"}}>Upload Image</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
                 </InputAccessoryView>
 
             </View>
@@ -128,7 +139,6 @@ class MemoCreate extends Component {
         });
 
         this.props.onMemoCreated(response.data);
-        this.refs.toast.show('Memo Created Successfully!');
         this.props.navigation.goBack();
     }
 
@@ -169,26 +179,17 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         flex: 1,
         color: '#757575',
-        fontSize: 14
+        fontSize: 14,
+        height: 200,
     },
     placeholder: {
         color: 'rgb(150,150,150)'
     },
-    modalBackground: {
-        flex: 1,
+    uploadContainer: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        backgroundColor: '#00000040'
-    },
-    activityIndicatorWrapper: {
-        backgroundColor: '#FFFFFF',
-        height: 100,
-        width: 100,
-        borderRadius: 10,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-around'
+        flexDirection: 'row'
     }
 });
 
