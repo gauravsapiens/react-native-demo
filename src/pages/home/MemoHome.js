@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, View, Button, Text, SectionList, StyleSheet} from 'react-native';
+import {ActivityIndicator, Image, View, Button, Text, SectionList, StyleSheet} from 'react-native';
 import {reduce as _reduce, map as _map, sortBy as _sortBy} from 'lodash';
 import moment from 'moment';
 
@@ -7,7 +7,7 @@ class MemoHome extends Component {
 
     static navigationOptions = ({navigation}) => {
         return {
-            title: 'Home',
+            title: 'Memos',
             headerRight: (
                 <Button
                     onPress={() => navigation.navigate('Create')}
@@ -19,11 +19,12 @@ class MemoHome extends Component {
     };
 
     componentDidMount() {
-        this.props.listMemos('');
+        this.props.fetchMemos('');
     }
 
     renderItem = ({item}) => (
         <View style={styles.item}>
+            {item.image && <Image style={styles.image} source={{uri: item.image}}/>}
             <Text>{item.description}</Text>
             <Text style={styles.with}>{item.with}</Text>
         </View>
@@ -72,10 +73,6 @@ class MemoHome extends Component {
         });
     };
 
-    getDateLabel = (date) => {
-        return moment(date).format('DD MMMM');
-    }
-
 }
 
 const styles = StyleSheet.create({
@@ -98,9 +95,16 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc'
     },
-    description: {},
+    image: {
+        height: 200,
+        marginBottom: 8,
+    },
+    description: {
+        fontSize: 14,
+    },
     with: {
-        marginTop: 4,
+        marginTop: 5,
+        fontSize: 11,
         color: 'rgb(100,100,100)'
 
     }

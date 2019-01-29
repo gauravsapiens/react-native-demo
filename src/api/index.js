@@ -9,5 +9,22 @@ export function createMemo(memo) {
     return index.post('/data/memo', memo);
 }
 
+export function uploadPhoto(imageUri) {
+    const imageName = Math.random().toString(36).substring(7);
+
+    const formData = new FormData();
+    formData.append('photo', {
+        uri: imageUri,
+        name: imageName,
+        type: 'image/jpg'
+    });
+
+    const config = {
+        headers: {'content-type': 'multipart/form-data'}
+    };
+
+    return index.post(`/files/memo_images/${imageName}`, formData, config);
+}
+
 export default index;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {listMemos} from '../../ducks/index';
+import {fetchMemos} from '../../ducks/index';
 import MemoHome from './MemoHome';
 
 const mapStateToProps = state => {
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    listMemos
+    fetchMemos
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemoHome);

@@ -10,6 +10,8 @@ import Router from './Router';
 
 const store = createStore(reducer, applyMiddleware(axiosMiddleware(apiClient)));
 
+console.disableYellowBox = true;
+
 export default class App extends Component {
     render() {
         return (

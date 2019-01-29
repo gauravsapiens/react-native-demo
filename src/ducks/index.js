@@ -31,7 +31,7 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function listMemos(user) {
+export function fetchMemos(user) {
     return {
         type: GET_MEMOS,
         payload: {
