@@ -32,13 +32,17 @@ class MemoHome extends Component {
         this.props.fetchMemos('');
     }
 
-    renderItem = ({item}) => (
-        <View style={styles.item}>
-            {item.image && <Image style={styles.image} source={{uri: item.image}}/>}
-            <Text>{item.description}</Text>
-            <Text style={styles.with}>{item.with}</Text>
-        </View>
-    );
+    renderItem = ({item}) => {
+        const backgroundColor = item.uploading ? '#eeeeee' : 'white';
+        const imageUri = item.imageUri || item.image;
+        return (
+            <View style={[styles.item, {backgroundColor}]}>
+                {imageUri && <Image style={styles.image} source={{uri: imageUri}}/>}
+                <Text>{item.description}</Text>
+                <Text style={styles.with}>{item.with}</Text>
+            </View>
+        )
+    };
 
     render() {
         const {memos, state} = this.props;

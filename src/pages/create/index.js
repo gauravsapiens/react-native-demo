@@ -1,10 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {onMemoCreated} from '../../ducks';
+import {createMemo} from '../../ducks';
 import MemoCreate from './MemoCreate';
 
 const mapDispatchToProps = {
-    onMemoCreated
+    createMemo
 };
 
 export default connect(null, mapDispatchToProps)(MemoCreate);

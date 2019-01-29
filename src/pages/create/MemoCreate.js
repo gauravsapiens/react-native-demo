@@ -37,7 +37,7 @@ class MemoCreate extends Component {
         this.state = {
             isDateTimePickerVisible: false,
             date: new Date(),
-            image: null,
+            imageUri: null,
         };
     }
 
@@ -48,7 +48,7 @@ class MemoCreate extends Component {
     render() {
         const inputAccessoryViewID = 'supportAccessoryView';
         const dateText = this.state.date ? this.state.date.toDateString() : 'Date?';
-        const {image} = this.state;
+        const {imageUri} = this.state;
 
         return (
             <View style={styles.container}>
@@ -60,10 +60,7 @@ class MemoCreate extends Component {
                         <Text style={styles.date}>{dateText}</Text>
                     </TouchableHighlight>
 
-                    {image != null && <ImageBackground style={styles.image} source={{uri: image.uri}}>
-                        {image.uploading ? <View style={styles.overlay}><ActivityIndicator color="white"/></View> :
-                            <View/>}
-                    </ImageBackground>}
+                    {imageUri != null && <ImageBackground style={styles.image} source={{uri: imageUri}}/>}
 
                     <TextInput returnKeyLabel={'Next'} returnKeyType={'next'}
                                onSubmitEditing={() => this.nextInputRef.focus()} autoFocus style={styles.participant}
@@ -121,24 +118,18 @@ class MemoCreate extends Component {
         }
 
         this.setState({
-            image: {uploading: true, uri}
-        });
-
-        const response = await uploadPhoto(uri);
-        this.setState({
-            image: {uploading: false, url: response.data.fileURL, uri}
+            imageUri: uri
         });
     };
 
-    createMemo = async () => {
-        const response = await createMemo({
+    createMemo = () => {
+        this.props.createMemo({
             title: 'Random Title',
             description: this.state.memo,
             with: this.state.participant,
-            image: this.state.image.url
+            imageUri: this.state.imageUri,
+            created: new Date()
         });
-
-        this.props.onMemoCreated(response.data);
         this.props.navigation.goBack();
     }
 

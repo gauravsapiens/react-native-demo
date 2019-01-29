@@ -4,11 +4,12 @@ import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import apiClient from './api';
 import axiosMiddleware from 'redux-axios-middleware';
+import thunk from 'redux-thunk';
 
 import reducer from './ducks';
 import Router from './Router';
 
-const store = createStore(reducer, applyMiddleware(axiosMiddleware(apiClient)));
+const store = createStore(reducer, applyMiddleware(axiosMiddleware(apiClient), thunk));
 
 console.disableYellowBox = true;
 
