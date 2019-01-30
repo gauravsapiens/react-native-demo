@@ -3,12 +3,12 @@ import {
     ActivityIndicator,
     Image,
     View,
-    Button,
     Text,
     SectionList,
     StyleSheet,
     TouchableWithoutFeedback
 } from 'react-native';
+import {AnimatedBackgroundColorView} from 'react-native-animated-background-color-view';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {reduce as _reduce, map as _map, sortBy as _sortBy} from 'lodash';
 import moment from 'moment';
@@ -33,13 +33,14 @@ class MemoHome extends Component {
     }
 
     renderItem = ({item}) => {
-        const backgroundColor = item.uploading ? '#eeeeee' : 'white';
         const imageUri = item.imageUri || item.image;
+
         return (
-            <View style={[styles.item, {backgroundColor}]}>
-                {imageUri && <Image style={styles.image} source={{uri: imageUri}}/>}
+            <View style={styles.item}>
+                {imageUri ? <Image style={styles.image} source={{uri: imageUri}}/> : <View/>}
                 <Text>{item.description}</Text>
                 <Text style={styles.with}>{item.with}</Text>
+                {item.uploading ? <View style={styles.overlay}/> : <View/>}
             </View>
         )
     };
@@ -120,7 +121,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 11,
         color: 'rgb(100,100,100)'
-
+    },
+    overlay: {
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        opacity: 0.1,
+        backgroundColor: 'gray',
     }
 });
 
